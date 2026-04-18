@@ -6,7 +6,11 @@
       "Bash(where py *)",
       "Bash(where python3 *)",
       "Bash(where pip *)",
-      "Read(//c/Users/lenovo/AppData/Local/Programs/**)"
+      "Read(//c/Users/lenovo/AppData/Local/Programs/**)",
+      "Bash(where python.exe)",
+      "Read(//c/ProgramData/chocolatey/**)",
+      "Read(//c//**)",
+      "Read(//c/Program Files/**)"
     ]
   }
 }

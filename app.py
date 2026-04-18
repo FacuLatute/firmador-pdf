@@ -323,26 +323,29 @@ def _build_stamp(page_width, page_height, signers, file_hash):
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=(page_width, page_height))
 
-    margin = 24
-    padding = 10
-    col_gap = 8
-    name_size = 10
-    dni_size = 9
-    label_size = 7
-    hash_size = 7
-    line_gap = 3
+    # ~5mm bottom margin, ~14pt
+    margin = 14
+    padding_top = 3
+    padding_bottom = 2
+    padding_x = 6
+    col_gap = 4
+    name_size = 7
+    dni_size = 6
+    label_size = 5
+    hash_size = 5
+    line_gap = 1
+    hash_gap = 2
 
     col_height = (
-        padding
+        padding_top
         + name_size
         + line_gap
         + dni_size
         + line_gap
         + label_size
-        + padding
     )
-    hash_area = line_gap + hash_size + padding
-    block_height = col_height + hash_area
+    hash_area = hash_gap + hash_size + padding_bottom
+    block_height = col_height + hash_area  # ~33pt ≈ 11.6mm
     block_width = page_width - 2 * margin
     block_x = margin
     block_y = margin
@@ -356,20 +359,19 @@ def _build_stamp(page_width, page_height, signers, file_hash):
     # Signer columns
     n = max(1, len(signers))
     total_gap = col_gap * (n - 1)
-    col_width = (block_width - 2 * padding - total_gap) / n
-    cols_top = block_y + block_height - padding
+    col_width = (block_width - 2 * padding_x - total_gap) / n
+    cols_top = block_y + block_height - padding_top
     cols_bottom = block_y + hash_area
 
     for i, s in enumerate(signers):
-        cx = block_x + padding + i * (col_width + col_gap)
+        cx = block_x + padding_x + i * (col_width + col_gap)
         center_x = cx + col_width / 2
 
-        # Separator between columns
         if i > 0:
             sep_x = cx - col_gap / 2
             c.setStrokeColor(HexColor("#e5e7eb"))
-            c.setLineWidth(0.4)
-            c.line(sep_x, cols_bottom + 2, sep_x, cols_top - 2)
+            c.setLineWidth(0.3)
+            c.line(sep_x, cols_bottom + 1, sep_x, cols_top - 1)
 
         c.setFillColor(HexColor("#111827"))
         c.setFont("Helvetica-Bold", name_size)
@@ -386,15 +388,9 @@ def _build_stamp(page_width, page_height, signers, file_hash):
         c.setFillColor(HexColor("#6b7280"))
         c.drawCentredString(center_x, y, "Firma Electrónica — Ley 25.506")
 
-    # Separator above hash
-    c.setStrokeColor(HexColor("#e5e7eb"))
-    c.setLineWidth(0.4)
-    c.line(block_x + padding, cols_bottom, block_x + block_width - padding, cols_bottom)
-
-    # Hash centered below
     c.setFont("Courier", hash_size)
     c.setFillColor(HexColor("#6b7280"))
-    hash_y = block_y + padding
+    hash_y = block_y + padding_bottom
     c.drawCentredString(block_x + block_width / 2, hash_y, "SHA-256: " + file_hash)
 
     c.showPage()
