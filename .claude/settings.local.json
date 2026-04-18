@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python app.py)",
+      "Bash(py --version)",
+      "Bash(where py *)",
+      "Bash(where python3 *)",
+      "Bash(where pip *)",
+      "Read(//c/Users/lenovo/AppData/Local/Programs/**)"
+    ]
+  }
+}
